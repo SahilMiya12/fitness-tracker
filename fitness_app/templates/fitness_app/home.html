@@ -1,0 +1,63 @@
+{% extends 'fitness_app/base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Header -->
+    <div class="col-12 mb-4">
+        <h1>Welcome{% if user.is_authenticated %}, {{ user.username }}{% endif %}!</h1>
+        <p class="lead">Track your fitness journey with ease.</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-fire"></i> Recent Workout</h5>
+                <p class="card-text">
+                    {% if last_workout %}
+                        <strong>{{ last_workout.exercise_name }}</strong><br>
+                        {{ last_workout.sets }} sets × {{ last_workout.reps }} reps<br>
+                        <small class="text-muted">{{ last_workout.date|date:"M d, Y" }}</small>
+                    {% else %}
+                        No workouts logged yet.
+                    {% endif %}
+                </p>
+                <a href="{% url 'log_workout' %}" class="btn btn-primary">Log New Workout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Goals Progress -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-bullseye"></i> Active Goals</h5>
+                <p class="card-text">
+                    {% if goals %}
+                        {% for goal in goals|slice:":2" %}
+                            <strong>{{ goal.goal_name }}</strong><br>
+                            {{ goal.current_value }}/{{ goal.target_value }} ({{ goal.progress }}%)<br>
+                        {% endfor %}
+                    {% else %}
+                        No active goals set.
+                    {% endif %}
+                </p>
+                <a href="{% url 'set_goal' %}" class="btn btn-primary">Set New Goal</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'workout_history' %}" class="btn btn-outline-secondary">View History</a>
+                    <a href="{% url 'view_goals' %}" class="btn btn-outline-secondary">All Goals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

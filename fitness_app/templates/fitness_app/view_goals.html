@@ -1,0 +1,84 @@
+{% extends 'fitness_app/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title mb-4">Your Goals</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="bg-dark text-light">
+                        <th>Goal</th>
+                        <th>Current</th>
+                        <th>Target</th>
+                        <th>Progress</th>
+                        <th>Target Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for goal in goals %}
+                    <tr>
+                        <td>{{ goal.goal_name }}</td>
+                        <td>{{ goal.current_value }}</td>
+                        <td>{{ goal.target_value }}</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" 
+                                     style="width: {{ goal.progress }}%">
+                                    {{ goal.progress }}%
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if goal.target_date %}
+                                {{ goal.target_date }}
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'update_goal' goal.goal_id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No goals set yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between mt-3">
+            <a href="{% url 'set_goal' %}" class="btn btn-primary">Set New Goal</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Dark mode fixes */
+    .dark-mode .card-body,
+    .dark-mode .table,
+    .dark-mode .table th,
+    .dark-mode .table td {
+        color: #ffffff !important;
+    }
+    .dark-mode .table {
+        --bs-table-bg: transparent;
+        --bs-table-striped-bg: rgba(255,255,255,0.05);
+        --bs-table-hover-bg: rgba(255,255,255,0.1);
+        --bs-table-border-color: #444;
+    }
+    .dark-mode .table thead th {
+        background-color: #1a1a1a !important;
+    }
+    .dark-mode .progress {
+        background-color: #333;
+    }
+    .dark-mode .btn-warning {
+        color: #000 !important;
+    }
+</style>
+{% endblock %}
